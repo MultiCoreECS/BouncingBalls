@@ -44,11 +44,7 @@ pub struct Position{
 }
 
 #[derive(Copy, Clone)]
-pub struct Color{
-    r: i32, 
-    b: i32,
-    g: i32
-}
+pub struct Color{}
 
 #[derive(Copy, Clone)]
 pub struct Radius(f32);
@@ -151,7 +147,7 @@ impl<'d, 'w: 'd> System<'d, 'w, World> for BallCollisionCheck{
             ent.remove(&mut colors);
         }
         for ent in add_colors.drain(..) {
-            ent.add(&mut colors, Color{r: rng.gen_range(0, 255), b: rng.gen_range(0, 255), g: rng.gen_range(0, 255)});
+            ent.add(&mut colors, Color{});
         }
     }
 }
