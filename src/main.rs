@@ -44,11 +44,7 @@ pub struct Position{
 }
 
 #[derive(Copy, Clone)]
-pub struct Color{
-    r: i32, 
-    b: i32,
-    g: i32
-}
+pub struct Color{}
 
 #[derive(Copy, Clone)]
 pub struct Radius(f32);
@@ -67,6 +63,7 @@ impl<'d, 'w: 'd> System<'d, 'w, World> for UpdateTime{
         time.delta = current.duration_since(time.last).as_secs_f64();
         time.total = current.duration_since(time.beginning).as_secs_f64();
         time.last = current;
+        println!("{}", time.delta as f32);
     }
 }
 
@@ -150,7 +147,7 @@ impl<'d, 'w: 'd> System<'d, 'w, World> for BallCollisionCheck{
             ent.remove(&mut colors);
         }
         for ent in add_colors.drain(..) {
-            ent.add(&mut colors, Color{r: rng.gen_range(0, 255), b: rng.gen_range(0, 255), g: rng.gen_range(0, 255)});
+            ent.add(&mut colors, Color{});
         }
     }
 }
@@ -159,7 +156,6 @@ impl<'d, 'w: 'd> System<'d, 'w, World> for BallCollisionCheck{
 // make things happen
 
 fn main() {
-    println!("balls go brrr");
 
     let app = App::new("balls")
         .version("1.0")
@@ -190,6 +186,7 @@ fn main() {
     world.register_comp::<Velocity>();
     world.register_comp::<Position>();
     world.register_comp::<Radius>();
+    world.register_comp::<Color>();
 
     world.insert(WorldBounds{x: s, y: s});
     world.insert(Time{
@@ -230,11 +227,10 @@ fn main() {
     drop(vels);
     drop(radius);
 
-    for _i in 0..100000 {
+    for _i in 0..10000 {
         scheduler.run(&world);
 
     }
 
     let finish = Read::<Time>::get_data(&world);
-    println!("Execution: {}", finish.total);
 }
